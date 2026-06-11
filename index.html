@@ -3,14 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Calculator</title>
+
     <link rel="stylesheet" href="style.css">
     <script defer src="script.js"></script>
 </head>
+
 <body>
+
     <div class="calculator">
-        <input id="display" placeholder="0" readonly></input>
-         <div id="buttons">
+
+       <button id="more-btn" class="function">MORE</button>
+
+        <input id="display" placeholder="0" readonly>
+
+        <div id="extra-buttons" class="hidden">
+
+            <button class="function">(</button>
+            <button class="function">)</button>
+
+            <button class="function">MR</button>
+            <button class="function">RAND</button>
+
+            <button class="function">π</button>
+            <button class="function">x²</button>
+
+            <button class="function">x³</button>
+
+        </div>
+
+        <div id="buttons">
+
             <button class="function">DEL</button>
             <button class="function">AC</button>
             <button class="function">%</button>
@@ -35,7 +58,10 @@
             <button class="number">0</button>
             <button class="number">,</button>
             <button class="operator">=</button>
+
+        </div>
+
     </div>
-    </div>
+
 </body>
 </html>

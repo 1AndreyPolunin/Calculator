@@ -3,6 +3,7 @@ const buttons = document.querySelector(".calculator");
 const extraButtons = document.querySelector("#extra-buttons");
 
 let expression = "";
+let displayExpression = "";
 
 function isOperator(symbol) {
     return (
@@ -12,10 +13,33 @@ function isOperator(symbol) {
         symbol === "/"
     );
 }
+function toSuperscript(text) {
+
+    const superscripts = {
+        "0": "⁰",
+        "1": "¹",
+        "2": "²",
+        "3": "³",
+        "4": "⁴",
+        "5": "⁵",
+        "6": "⁶",
+        "7": "⁷",
+        "8": "⁸",
+        "9": "⁹",
+        "-": "⁻"
+    };
+
+    return text
+        .toString()
+        .split("")
+        .map(char => superscripts[char] || char)
+        .join("");
+
+}
 
 function updateDisplay() {
 
-    display.value = expression;
+    display.value = displayExpression;
 
     display.scrollLeft = display.scrollWidth;
 
@@ -39,8 +63,8 @@ buttons.addEventListener("click", (event) => {
         return;
     }
 
-    let value = event.target.textContent;
-    console.log("[" + value + "]");
+    let value = event.target.textContent.trim();
+
     if (value === ",") {
         value = ".";
     }
@@ -48,6 +72,7 @@ buttons.addEventListener("click", (event) => {
     if (value === "AC") {
 
         expression = "";
+        displayExpression = "";
         updateDisplay();
 
     }
@@ -55,6 +80,7 @@ buttons.addEventListener("click", (event) => {
     else if (value === "DEL") {
 
         expression = expression.slice(0, -1);
+        displayExpression = displayExpression.slice(0, -1);
         updateDisplay();
 
     }
@@ -85,7 +111,9 @@ buttons.addEventListener("click", (event) => {
 
         if (extraButtons.classList.contains("hidden")) {
             extraButtons.classList.remove("hidden");
-        } else {
+        }
+
+        else {
             extraButtons.classList.add("hidden");
         }
 
@@ -172,6 +200,24 @@ buttons.addEventListener("click", (event) => {
 
     }
 
+ else if (value === "e^x") {
+
+    if (expression !== "") {
+
+        const power = displayExpression;
+
+        expression =
+            "Math.exp(" + expression + ")";
+
+        displayExpression =
+            "e" + toSuperscript(power);
+
+        updateDisplay();
+
+    }
+
+}
+
     else if (value === "=") {
 
         try {
@@ -180,6 +226,7 @@ buttons.addEventListener("click", (event) => {
                 Function("return " + expression)();
 
             expression = result.toString();
+            displayExpression = expression;
 
             updateDisplay();
 
@@ -196,7 +243,8 @@ buttons.addEventListener("click", (event) => {
 
     else {
 
-        const lastSymbol = expression[expression.length - 1];
+        const lastSymbol =
+            expression[expression.length - 1];
 
         if (
             isOperator(value) &&
@@ -210,7 +258,21 @@ buttons.addEventListener("click", (event) => {
 
         else {
 
+            if (
+              (
+            expression.endsWith(")") ||
+            displayExpression.endsWith("²") ||
+            displayExpression.endsWith("³")
+        ) &&
+        !isOperator(value)
+        ) {
+                expression += "*";
+                displayExpression += "*";
+
+            }
+
             expression += value;
+            displayExpression += value;
 
         }
 

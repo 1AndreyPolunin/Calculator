@@ -4,6 +4,8 @@ const extraButtons = document.querySelector("#extra-buttons");
 
 let expression = "";
 let displayExpression = "";
+let angleMode = "DEG";
+let activeFunction = "";
 
 function isOperator(symbol) {
     return (
@@ -119,6 +121,57 @@ buttons.addEventListener("click", (event) => {
 
     }
 
+    else if (value === "DEG" || value === "RAD") {
+
+    const modeButton =
+        document.querySelector("#angle-mode");
+
+    if (angleMode === "DEG") {
+
+        angleMode = "RAD";
+        modeButton.textContent = "RAD";
+
+    }
+
+    else {
+
+        angleMode = "DEG";
+        modeButton.textContent = "DEG";
+
+    }
+
+}
+
+else if (value === "sin") {
+
+    if (activeFunction === "") {
+
+        activeFunction = "sin";
+
+        expression = "";
+        displayExpression = "sin()";
+
+        updateDisplay();
+
+    }
+
+}
+
+else if (value === "cos") {
+
+    if (activeFunction === "") {
+
+        activeFunction = "cos";
+
+        expression = "";
+        displayExpression = "cos()";
+
+        updateDisplay();
+
+    }
+
+}
+
     else if (value === "RAND") {
 
         const randomNumber =
@@ -221,13 +274,57 @@ buttons.addEventListener("click", (event) => {
     else if (value === "=") {
 
         try {
+            if (activeFunction === "sin") {
+
+    if (angleMode === "DEG") {
+
+        expression =
+            "Math.sin((" +
+            expression +
+            ")*Math.PI/180)";
+
+    }
+
+    else {
+
+        expression =
+            "Math.sin(" +
+            expression +
+            ")";
+
+    }
+
+}
+
+else if (activeFunction === "cos") {
+
+    if (angleMode === "DEG") {
+
+        expression =
+            "Math.cos((" +
+            expression +
+            ")*Math.PI/180)";
+
+    }
+
+    else {
+
+        expression =
+            "Math.cos(" +
+            expression +
+            ")";
+
+    }
+
+}
 
             const result =
                 Function("return " + expression)();
 
             expression = result.toString();
             displayExpression = expression;
-
+            activeFunction = "";
+            
             updateDisplay();
 
         }
@@ -269,12 +366,27 @@ buttons.addEventListener("click", (event) => {
                 expression += "*";
                 displayExpression += "*";
 
-            }
+            }if (
+            activeFunction === "sin" ||
+            activeFunction === "cos"
+            ) {
 
             expression += value;
-            displayExpression += value;
 
-        }
+            displayExpression =
+            activeFunction +
+            "(" +
+            expression +
+            ")";
+
+            }
+
+        else {
+
+        expression += value;
+        displayExpression += value;
+
+    }}
 
         updateDisplay();
 
